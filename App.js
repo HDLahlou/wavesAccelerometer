@@ -4,8 +4,8 @@ import { Constants, Accelerometer } from 'expo-sensors';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as Permissions from 'expo-permissions';
-
-export default class App extends Component {
+import { Link } from "./Linking"
+export default class App extends Component<{}> {
   state = {
     // Of type accelermoterData, will be a json of arrays
     accelerometerDataTest: [],
@@ -135,25 +135,7 @@ render() {
   let timeDisp = (this.state.recordData)? this.state.accelerometerData.time: 0
   return (
     <View style={styles.container}>
-      {/* <View
-        style={{
-          position: 'absolute',
-          top:
-            (-this.screenHeight * (this.state.accelerometerData.y - 1.0)) /
-              2.0 -
-            this.boxWidth / 2.0,
-          left:
-            (this.screenWidth * (this.state.accelerometerData.x + 1.0)) /
-              2.0 -
-            this.boxWidth / 2.0,
-          width: this.screenWidth / 10.0,
-          height: this.screenWidth / 10.0,
-          backgroundColor: '#056ECF',
-        }}
-      /> */}
       <View style={styles.textContainer}>
-        {/* <Text style={styles.paragraph}>Tilt your phone to move the box!</Text> */}
-
         <Text style={styles.paragraph}>
           x = {this.state.accelerometerData.x.toFixed(2)}
           {', '}y = {this.state.accelerometerData.y.toFixed(2)}
@@ -176,6 +158,9 @@ render() {
           <Picker.Item label="G2" value="1" />
           <Picker.Item label="G3" value="2" />
         </Picker>
+      </View>
+      <View style={styles.buttonContainer}>
+        <Link/>
       </View>
     </View>
   );
@@ -204,10 +189,12 @@ buttonContainer: {
   // backgroundColor: "#c7d9cc",
   width: 350,
   // height: 100,
-  position: 'absolute',
-  bottom: 100,
+  position: 'relative',
+  top: 150,
   flexDirection: "row",
-  justifyContent: "space-around"
+  justifyContent: "space-around",
+  flexWrap: "wrap",
+  margin: 10,
 },
 buttons:{
   // margin: 10,

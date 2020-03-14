@@ -1,0 +1,3 @@
+Here, the G1, G2, G3, ... folders contain trials for all the gestures. 
+Each separate csv file in the gesture represents a separate trial for that gesture.
+The first row in the csv file represents X_accl, the second row, represents Y_accl, and the third row represents Z_accl.

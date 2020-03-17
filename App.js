@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, Picker, View, StyleSheet, Dimensions, Button, Platform } from 'react-native';
+import { Text, Picker, View, StyleSheet, Dimensions, Button, Platform, Image } from 'react-native';
 import SwitchToggle from "react-native-switch-toggle";
 import RNPickerSelect from 'react-native-picker-select';
 import CountdownCircle from 'react-native-countdown-circle'
@@ -315,7 +315,7 @@ export default class App extends Component<{}> {
       }
     })
   }
-  
+
   // Calls func to add data to array
   pressButtonToIncrement = () => {
     this.pushDataToArray()
@@ -415,14 +415,18 @@ export default class App extends Component<{}> {
           </View> */}
         </View>
         <View style={productionDisplay}>
-        <View style={styles.logo}>
-        <Text style={styles.h1}>
-            {'Logo' /*TODO @angelawholiu*/}
-          </Text>
+          <View style={styles.logo}>
+            <Image
+              style={{ width: 100, height: 100 }}
+              source={require('./assets/waves_logo.png')}
+            />
+            <Text style={styles.h1}>
+              {'MotionWavez'}
+            </Text>
           </View>
-          {/*TODO @angelawholiu: add info button w instr on how to use */} 
+          {/*TODO @angelawholiu: add info button w instr on how to use */}
           <View style={styles.center}>
-          <Text style={styles.h2}>
+            <Text style={styles.h2}>
               {'Turn on Detection'}
             </Text>
             <SwitchToggle
@@ -514,21 +518,21 @@ export default class App extends Component<{}> {
               />
             </View>
           </View>
-          <View style={{marginTop: 50, alignItems: 'center'}}>
-          <Text style={styles.h2}>
+          <View style={{ marginTop: 50, alignItems: 'center' }}>
+            <Text style={styles.h2}>
               {'Time Left to Perform Gesture'}
             </Text>
             {/* TODO: @HDLahlou: map to time until gesture timeout  */}
-          <CountdownCircle
-            seconds={10}
-            radius={30}
-            borderWidth={8}
-            color="#007fff"
-            bgColor="#fff"
-            textStyle={{ fontSize: 20 }}
-            onTimeElapsed={() => console.log('Elapsed!')}
-        />
-        </View>
+            <CountdownCircle
+              seconds={10}
+              radius={30}
+              borderWidth={8}
+              color="#007fff"
+              bgColor="#fff"
+              textStyle={{ fontSize: 20 }}
+              onTimeElapsed={() => console.log('Elapsed!')}
+            />
+          </View>
         </View>
       </View>
     );
@@ -551,10 +555,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ecf0f1',
   },
   h1: {
-    fontSize: 50,
+    fontSize: 34,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#007fff',
+    color: '#02B8EA',
   },
   paragraph: {
     margin: 10,
@@ -564,7 +568,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   h2: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     marginBottom: 5,
   },
@@ -579,13 +583,16 @@ const styles = StyleSheet.create({
     top: 40,
   },
   logo: {
+    flexDirection: 'row',
     position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
     top: 60,
   },
   center: {
     position: 'absolute',
     top: '40%',
-    alignItems:'center',
+    alignItems: 'center',
   },
   buttonContainer: {
     // backgroundColor: "#c7d9cc",

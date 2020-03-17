@@ -5,7 +5,8 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as Permissions from 'expo-permissions';
 import link from "./Linking"
-import * as BackgroundFetch from 'expo-background-fetch'
+
+
 export default class App extends Component<{}> {
   state = {
     // State Variables for Accelerometer Data
@@ -27,8 +28,6 @@ export default class App extends Component<{}> {
 /*
 Front End: Logo, start/stop button for subscriptions, Map 3 gestures to a certain action
 */
-
-
   componentWillUnmount() {
     this._unsubscribeFromAccelerometer();
     this._unsubscribeFromGyroscope();
@@ -193,6 +192,16 @@ Front End: Logo, start/stop button for subscriptions, Map 3 gestures to a certai
     }
   }
 
+  startRecordingTEMP = () =>{
+    console.log("Commencing Data Recording:");
+    let currentTime = Date.now();
+    this.setState((prevState, props) => {
+      return {
+        recordData: !prevState.recordData,
+        initialTime: currentTime, 
+    }
+    })
+  }
 
 // TODO: Delete These funcs below
 
@@ -402,15 +411,15 @@ saveFileTEMP = async () => {
               {'Production Mode'}
             </Text>
           </View>
-          <View style={styles.center}>
-            <Button style={styles.buttons} onPress={this.pressButtonToLogTEMP} title="LOG RESULTS"></Button>
+          <View style={styles.buttonContainer}>
+            <Button style={styles.buttons} onPress={this.startRecordingTEMP} title="START"></Button>
+            {/* <Button style={styles.buttons} onPress={this.pressButtonToLogTEMP} title="LOG RESULTS"></Button> */}
           </View>
         </View>
       </View>
     );
   }
   }
-
 
   // STYLING
   const styles = StyleSheet.create({

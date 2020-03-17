@@ -21,7 +21,7 @@ export default class App extends Component<{}> {
     initialTime: Date.now(),
     recordData: false,
     testMode: false,
-    postURL: 'http://ec10f87b-6c85-4b3f-afcd-3962158184e4.eastus.azurecontainer.io/score',
+    postURL: 'http://1b09e691-2baf-4b55-857d-b0cca19d81af.eastus.azurecontainer.io/score',
   };
 
 /*
@@ -72,8 +72,8 @@ Front End: Logo, start/stop button for subscriptions, Map 3 gestures to a certai
               })
             } else {
               console.log("Ending data recording");
-              // this.sendDataToInterpret(this.state.accelerometerDataHolder, this.state.gyroscopeDataHolder);
-              this.pushDataToArrayTEMP(this.state.accelerometerDataHolder, this.state.gyroscopeDataHolder);
+              this.sendDataToInterpret(this.state.accelerometerDataHolder, this.state.gyroscopeDataHolder);
+              // this.pushDataToArrayTEMP(this.state.accelerometerDataHolder, this.state.gyroscopeDataHolder);
 
               this.setState((prevState, props) => {
                 return {

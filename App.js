@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, Picker, View, StyleSheet, Dimensions, Platform } from 'react-native';
+import { Image, Text, Picker, View, StyleSheet, Dimensions, Platform } from 'react-native';
 import { Button} from 'react-native-elements'
 import SwitchToggle from "react-native-switch-toggle";
 import RNPickerSelect from 'react-native-picker-select';
@@ -29,31 +29,25 @@ export default class App extends Component<{}> {
     recordData: false,
     testMode: false,
     postURL: 'http://1b09e691-2baf-4b55-857d-b0cca19d81af.eastus.azurecontainer.io/score',
-    countDownTime: 1
+    g1Link: 'music',
+    g6Link: 'lyft',
+    g2Link: 'mail',
   };
 
-  /*
-  Front End: Logo, start/stop button for subscriptions, Map 3 gestures to a certain action
-  */
 
 
   componentWillUnmount() {
-    this._unsubscribeFromAccelerometer();
-    this._unsubscribeFromGyroscope();
-    console.log("Accel Off")
+    // this._unsubscribeFromAccelerometer();
+    // this._unsubscribeFromGyroscope();
   }
 
   componentDidMount() {
-    this._subscribeToAccelerometer();
-    this._subscribeToGyroscope();
-
-    console.log("Accel On")
+    // this._subscribeToAccelerometer();
+    // this._subscribeToGyroscope();
     // console.log(this.state.initialTime);
   }
 
   componentWillMount() {
-    // let array = [[],[],[]]
-    // this.setState( {accelerometerDataTest: array, gyroscopeDataTest: array})
   }
 
   /**********ACCELEROMETER LISTENER*********/
@@ -84,6 +78,7 @@ export default class App extends Component<{}> {
             } else {
               console.log("Ending data recording");
               this.sendDataToInterpret(this.state.accelerometerDataHolder, this.state.gyroscopeDataHolder);
+              // NOTE: BELOW FUNCTION IS TO RECORD DATA WHILE IN PROD
               // this.pushDataToArrayTEMP(this.state.accelerometerDataHolder, this.state.gyroscopeDataHolder);
 
               this.setState((prevState, props) => {
@@ -102,7 +97,7 @@ export default class App extends Component<{}> {
                 return {
                   recordData: !prevState.recordData,
                   initialTime: currentTime,
-                  countDownTime: 3,
+                  // countDownTime: 3,
 
                 }
               })
@@ -183,10 +178,10 @@ export default class App extends Component<{}> {
       console.log(responseJson)
       switch(responseJson.result){
         case 0:
-          link._musicOpenWithLinking()
+          link.generalLinking(this.state.g1Link)
           break;
         case 3:
-          link._rideOpenWithLinking()
+          link.generalLinking(this.state.g6Link)
           break;
         default:
           console.log("No model was matched");
@@ -196,18 +191,7 @@ export default class App extends Component<{}> {
       console.error(error);
     }
   }
-
-  startRecordingTEMP = () =>{
-    console.log("Commencing Data Recording:");
-    let currentTime = Date.now();
-    this.setState((prevState, props) => {
-      return {
-        recordData: !prevState.recordData,
-        initialTime: currentTime, 
-    }
-    })
-  }
-  
+  // ===========FUNCTIONS FOR PRODUCTION FRONT END DISPLAY===========
   getButtonText() {
     return this.state.switchOnToggle ? "" : "";
   }
@@ -220,11 +204,21 @@ export default class App extends Component<{}> {
     return this.state.switchOnToggle ? "On" : "";
   }
 
-
-  // TODO: Delete These funcs below
-
+  // ===========FUNCTIONS FOR PRODTEST===========
+  // NOTE: Below functions are for testing and collecting data while in production mode
+  // PRODTEST Functions are currently not in use
+  startRecordingPRODTEST = () =>{
+    console.log("Commencing Data Recording:");
+    let currentTime = Date.now();
+    this.setState((prevState, props) => {
+      return {
+        recordData: !prevState.recordData,
+        initialTime: currentTime, 
+    }
+    })
+  }
   // Func to add current recording to array
-  pushDataToArrayTEMP = (accel, gyro) => {
+  pushDataToArrayPRODTEST = (accel, gyro) => {
     let { accelerometerDataHolder, currentCollectIndex, accelerometerDataTest, gyroscopeDataHolder, gyroscopeDataTest } = this.state
     let currentTime = Date.now();
     let arrayAccel = accelerometerDataTest;
@@ -243,14 +237,14 @@ export default class App extends Component<{}> {
     this.testCurrentDataTest()
   }
 
-  pressButtonToLogTEMP = () => {
+  pressButtonToLogPRODTEST = () => {
     // console.log(this.state.accelerometerDataTest);
     console.log(" Logging into text doc");
-    this.saveFileTEMP()
+    this.saveFilePRODTEST()
   }
 
   // Method to save data to txt file
-  saveFileTEMP = async () => {
+  saveFilePRODTEST = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (status === "granted") {
       // let accelStringToPrint = JSON.stringify(this.state.accelerometerDataTest[0]);
@@ -263,7 +257,6 @@ export default class App extends Component<{}> {
     }
   }
 
-  // ======================
   // ===========FUNCTIONS FOR DATA COLLECTING AND TESTING===========
   // Saves the current Accel Data into a text document
   pressButtonToLog = () => {
@@ -324,7 +317,7 @@ export default class App extends Component<{}> {
       }
     })
   }
-  
+
   // Calls func to add data to array
   pressButtonToIncrement = () => {
     this.pushDataToArray()
@@ -367,13 +360,12 @@ export default class App extends Component<{}> {
   onPressToggle = () => {
     this.setState({ switchOnToggle: !this.state.switchOnToggle });
     if(this.state.switchOnToggle){
-      // this._unsubscribeFromAccelerometer();
-      // this._unsubscribeFromGyroscope();
+      this._unsubscribeFromAccelerometer();
+      this._unsubscribeFromGyroscope();
       console.log("Accel Off")
     } else{
-      // this._subscribeToAccelerometer();
-      // this._subscribeToGyroscope();
-
+      this._subscribeToAccelerometer();
+      this._subscribeToGyroscope();
       console.log("Accel On")
     }
     
@@ -390,6 +382,7 @@ export default class App extends Component<{}> {
     let timeDisp = (this.state.recordData) ? this.state.accelerometerData.time : 0
     // Deafault to show production and hide test
     let testDisplay = styles.hideContainer;
+    let timeLeft = (this.state.recordData) ? (3000-this.state.accelerometerData.time)/1000: 0
     let productionDisplay = styles.container;
     if (testMode) {
       testDisplay = styles.container;
@@ -421,7 +414,6 @@ export default class App extends Component<{}> {
           <View style={styles.buttonContainer}>
             <Button style={styles.buttons} onPress={this.pressButtonToLog} title="LOG RESULTS"></Button>
             <Button style={styles.buttons} onPress={this.pressButtonToStart} title={startButton}></Button>
-            {/* <Button style={styles.buttons} onPress={this.pressButtonToIncrement} title={takeNum}></Button> */}
             <Button style={styles.buttons} onPress={this.testCurrentDataTest} title="Test"></Button>
             <Button style={styles.buttons} onPress={this.removeLastEntry} title="Drop Last"></Button>
             <Picker
@@ -437,17 +429,22 @@ export default class App extends Component<{}> {
               <Picker.Item label="G5" value="5" />
             </Picker>
           </View>
-          {/* <View style={styles.buttonContainer}>
-            <Link/>
-          </View> */}
         </View>
         <View style={productionDisplay}>
           <View style={styles.logo}>
-          <Text style={styles.h1}>
-              {'Logo' /*TODO @angelawholiu*/}
+            <Image
+              style={{ width: 100, height: 100 }}
+              source={require('./assets/waves_logo.png')}
+            />
+            <Text style={styles.h1}>
+              {'MotionWavez'}
+            </Text>
+          </View>
+          <View style={styles.center}>
+            <Text style={styles.h2}>
+              {'Turn on Detection'}
             </Text>
             </View>
-            {/*TODO @angelawholiu: add info button w instr on how to use */} 
             <View style={styles.center}>
             <Text style={styles.h2}>
                 {'Turn on Detection'}
@@ -497,55 +494,58 @@ export default class App extends Component<{}> {
                 duration={500}
               />
             </View>
-            <View style={{ marginTop: "100%", alignItems: 'center' }}>
+            <View style={{ marginTop: "50%"}}>
               <Text style={styles.h2}>
                 {'Customize Gesture Actions'}
               </Text>
-              <View style={{ flexDirection: 'row' }}>
+              <View>
                 <Text style={styles.h5}>
                   {'Gesture 1'}
                 </Text>
                 <RNPickerSelect // TODO @HDLahlou: map to actions
-                  onValueChange={(value) => console.log(value)}
+                  onValueChange={(value) => this.setState({g1Link: value})}
                   items={[
                     { label: 'Play Music', value: 'music' },
                     { label: 'Mail Refresh', value: 'mail' },
-                    { label: 'Send Text', value: 'sms' },
+                    { label: 'Find Ride', value: 'lyft' },
                   ]}
                 />
               </View>
-              <View style={{ flexDirection: 'row' }}>
+              <View>
                 <Text style={styles.h5}>
                   {'Gesture 2'}
                 </Text>
                 <RNPickerSelect
-                  onValueChange={(value) => console.log(value)}
+                  onValueChange={(value) => this.setState({g2Link: value})}
                   items={[
                     { label: 'Play Music', value: 'music' },
                     { label: 'Mail Refresh', value: 'mail' },
-                    { label: 'Send Text', value: 'sms' },
+                    { label: 'Find Ride', value: 'lyft' },
                   ]}
                 />
               </View>
-              <View style={{ flexDirection: 'row' }}>
+              <View>
                 <Text style={styles.h5}>
                   {'Gesture 3'}
                 </Text>
                 <RNPickerSelect
-                  onValueChange={(value) => console.log(value)}
+                  onValueChange={(value) => this.setState({g6Link: value})}
                   items={[
                     { label: 'Play Music', value: 'music' },
                     { label: 'Mail Refresh', value: 'mail' },
-                    { label: 'Send Text', value: 'sms' },
+                    { label: 'Find Ride', value: 'lyft' },
                   ]}
                 />
               </View>
             </View>
             <View style={{marginTop: 30, alignItems: 'center'}}>
-            <Text style={styles.h2}>
+              <Text style={styles.h2}>
                 {'Time Left to Perform Gesture'}
               </Text>
-            <CountdownCircle
+              <Text style={styles.h2}>
+                {timeLeft} {'Seconds'}
+              </Text>
+            {/* <CountdownCircle
               seconds={this.state.countDownTime}
               radius={30}
               borderWidth={8}
@@ -553,13 +553,7 @@ export default class App extends Component<{}> {
               bgColor="#fff"
               textStyle={{ fontSize: 20 }}
               onTimeElapsed={() => console.log('Elapsed!')}
-          />
-          </View>
-          <View style={styles.bottomButtonContainer1}>
-            <Button  buttonStyle={styles.button} type="clear" onPress={link._musicOpenWithLinking} title="__"></Button>
-          </View>
-          <View style={styles.bottomButtonContainer2}>
-            <Button  buttonStyle={styles.button} type="clear" onPress={link._rideOpenWithLinking} title="__"></Button>
+          /> */}
           </View>
         </View>
       </View>
@@ -580,10 +574,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ecf0f1',
   },
   h1: {
-    fontSize: 50,
+    fontSize: 34,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#007fff',
+    color: '#02B8EA',
   },
   paragraph: {
     margin: 10,
@@ -593,7 +587,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   h2: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     marginBottom: 5,
   },
@@ -608,13 +602,16 @@ const styles = StyleSheet.create({
     top: 40,
   },
   logo: {
+    flexDirection: 'row',
     position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
     top: 60,
   },
   center: {
     position: 'absolute',
-    top: '40%',
-    alignItems:'center',
+    top: '30%',
+    alignItems: 'center',
   },
   buttonContainer: {
     // backgroundColor: "#c7d9cc",
@@ -636,16 +633,6 @@ const styles = StyleSheet.create({
   bottomContainer: {
     position: 'absolute',
     top: '60%',
-  },
-  bottomButtonContainer1:{
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-  },
-  bottomButtonContainer2:{
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
   },
   button:{
     // color: '#1E6738',

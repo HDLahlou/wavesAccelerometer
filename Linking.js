@@ -3,6 +3,7 @@ import { Button, Linking, View, StyleSheet } from 'react-native';
 import { Constants, WebBrowser } from 'expo';
 
 export class Link /*extends Component*/ {
+  // Below was testing linking through button componets
   // render() {
   //   return (
   //     <View style={styles.container}>
@@ -34,7 +35,26 @@ export class Link /*extends Component*/ {
   //     </View>
   //   );
   // }
-  
+
+  // General End point to determine where to link to 
+  generalLinking = (val) => {
+    console.log('Switching to: ' + val)
+    switch(val){
+      case 'music':
+        this._musicOpenWithLinking()
+        break;
+      case 'mail':
+        this._mailOpenWithLinking()
+        break;
+      case 'lyft':
+        this._rideOpenWithLinking()
+        break;
+      default:
+        console.log("No match")
+    }
+  }
+
+  // ===========FUNCTIONS FOR LINKING===========
   _smsOpenWithLinking = () => {
     Linking.openURL('sms:+17037988538');
   }
